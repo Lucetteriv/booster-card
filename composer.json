@@ -1,5 +1,16 @@
 {
-    "require": {
-        "vlucas/phpdotenv": "^5.6"
-    }
+    "name": "utilisateur/booster-card",
+    "autoload": {
+        "psr-4": {
+            "App\\Auth\\": "app/auth/",
+            "App\\Database\\": "app/database/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Lucetteriv",
+            "email": "com.lucie.ri@gmail.com"
+        }
+    ],
+    "require": {}
 }
