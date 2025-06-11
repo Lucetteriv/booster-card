@@ -3,6 +3,7 @@
 namespace App\Auth;
 
 class LogOutUser{
+    
     public function logout(): void
     {
         if (session_status() === PHP_SESSION_NONE) 
@@ -23,8 +24,11 @@ class LogOutUser{
 
         session_destroy();
 
-        header("Location:../index.php");
+        header("Location:../../public/index.php");
         exit();
     }
 };
+
+$LogOutUser = new LogOutUser();
+$LogOutUser->logout(); 
 ?>

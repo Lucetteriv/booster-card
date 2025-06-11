@@ -4,6 +4,7 @@
         "psr-4": {
             "App\\Auth\\": "app/auth/",
             "App\\Database\\": "app/database/"
+            
         }
     },
     "authors": [
