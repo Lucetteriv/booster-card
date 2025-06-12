@@ -3,11 +3,16 @@
 include '../config/bootstrap.php';
 
 use App\Database\Database;
+use App\Class\Booster;
 Database::getconnection();
 
 session_start();
 
 $estConnecte = isset($_SESSION['user']);
+
+
+
+//var_dump($booster);
 
 ?>
 <!DOCTYPE html>
@@ -64,9 +69,24 @@ $estConnecte = isset($_SESSION['user']);
   </div>
 </nav>
 <?php if ($estConnecte):  echo 'Bienvenu ' . htmlspecialchars($_SESSION['user']['name'])?>
+<?php $booster = Booster::generateBooster();?>
+<?php foreach($booster as $key => $card):?>
+  <p><?= $card['pokedex_id'];?></p>
+  <p><?= $card['category'];?></p>
+  <p><?= $card['name']['fr'];?></p>
+  <p><?= $card['sprites']['regular'];?></p>
+   <p><?= $card['stats']['hp'];?></p>
+   <p><?= $card['stats']['atk'];?></p>
+   <p><?= $card['stats']['def'];?></p>
+   <p><?= $card['stats']['spe_atk'];?></p>
+   <p><?= $card['stats']['spe_def'];?></p>
+   <p><?= $card['stats']['vit'];?></p>
+<?php endforeach; ?>
 
 <?php else: ?>
 <p>Veuillez vous connecter pour ouvrir les packs.</p>
 <?php endif; ?>
+
+
 </body>
 </html>
