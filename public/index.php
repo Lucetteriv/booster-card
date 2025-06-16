@@ -11,7 +11,6 @@ session_start();
 $estConnecte = isset($_SESSION['user']);
 
 
-
 //var_dump($booster);
 
 ?>
@@ -24,6 +23,8 @@ $estConnecte = isset($_SESSION['user']);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/card.css" rel="stylesheet">
+    <script src="../js/cards.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="light">
@@ -72,54 +73,73 @@ $estConnecte = isset($_SESSION['user']);
 <?php if ($estConnecte):  echo 'Bienvenu ' . htmlspecialchars($_SESSION['user']['name'])?>
 <?php $booster = Booster::generateBooster();?>
 
+<div class="container vh-100">
+  <div class="row justify-content-center align-items-center h-100">
+    <div class="col-3 position-relative">
+      <?php $i = 9; ?>
+      <?php foreach($booster as $key => $card):?>
+        <div class="card <?= Booster::getPokemonType($booster[$key])?>" id="card"
+            data-nom="<?= $card['name']['fr'] ?>"
+            data-pv="<?= $card['stats']['hp'] ?>"
+            data-atk="<?= $card['stats']['atk'] ?>" 
+            data-def="<?= $card['stats']['def'] ?>"
+            data-spe_atk="<?= $card['stats']['spe_atk'] ?>"
+            data-spe_def="<?= $card['stats']['spe_def'] ?>"
+            data-vit="<?= $card['stats']['vit'] ?>"
+            data-image="<?= $card['sprites']['regular'] ?>"
+            data-category="<?= $card['category'] ?>">
 
-<?php foreach($booster as $key => $card):?>
-  <div class=" <?= Booster::getPokemonType($booster[$key])?>" id="card">
-    <div class="top-card">
-      <p><?= $card['name']['fr'];?></p>
-      <div class="stat">
+          <div class="top-card">
+            <p><?= $card['name']['fr'];?></p>
+            <div class="stat">
+              </div>
+              <div class="top-type">
+              <p class="pv"><small>PV</small><?= $card['stats']['hp'];?></p>
+              <?php foreach($card['types'] as $type):?>
+                <?php $types = $type['name']?>
+                <img class="type" src="<?= $type['image'];?>" alt="image">
+              <?php endforeach; ?>
+            </div>
+          </div>
+          <div class="image">
+            <img src="<?= $card['sprites']['regular'];?>" alt="image">
+          </div>
+          <div class="bottom-card">
+            <div class="stat">
+              <p>Points d'attaque</p>
+              <p><?= $card['stats']['atk'];?></p>
+            </div>
+            <div class="stat">
+              <p>Points de defense</p>
+              <p><?= $card['stats']['def'];?></p>
+            </div>
+            <div class="stat">
+              <p>Attaque speciale</p>
+              <p><?= $card['stats']['spe_atk'];?></p>
+            </div>
+            <div class="stat">
+              <p>Defence speciale</p>
+              <p><?= $card['stats']['spe_def'];?></p>
+            </div>
+            <div class="stat">
+              <p>Vitesse</p>
+              <p><?= $card['stats']['vit'];?></p>
+            </div>
+          </div>
+          <p><?= $card['category'];?></p>
         </div>
-        <div class="top-type">
-        <p class="pv"><small>PV</small><?= $card['stats']['hp'];?></p>
-        <?php foreach($card['types'] as $type):?>
-          <?php $types = $type['name']?>
-          <img class="type" src="<?= $type['image'];?>" alt="image">
-        <?php endforeach; ?>
-      </div>
-    </div>
-    <div class="image">
-      <img src="<?= $card['sprites']['regular'];?>" alt="image">
-    </div>
-    <div class="bottom-card">
-      <div class="stat">
-        <p>Points d'attaque</p>
-        <p><?= $card['stats']['atk'];?></p>
-      </div>
-      <div class="stat">
-        <p>Points de defense</p>
-        <p><?= $card['stats']['def'];?></p>
-      </div>
-      <div class="stat">
-        <p>Attaque speciale</p>
-        <p><?= $card['stats']['spe_atk'];?></p>
-      </div>
-      <div class="stat">
-        <p>Defence speciale</p>
-        <p><?= $card['stats']['spe_def'];?></p>
-      </div>
-      <div class="stat">
-        <p>Vitesse</p>
-        <p><?= $card['stats']['vit'];?></p>
-      </div>
-    </div>
-    <p><?= $card['category'];?></p>
-   </div>
-<?php endforeach; ?>
+        <?php $i--; ?>
+      <?php endforeach; ?>
 
-<?php else: ?>
-<p>Veuillez vous connecter pour ouvrir les packs.</p>
-<?php endif; ?>
+      <?php else: ?>
+      <p>Veuillez vous connecter pour ouvrir les packs.</p>
+      <?php endif; ?>
 
-
+      <form class="AddToCol" method="post" style="display: none;">
+        <button class="btn btn-primary" type="submit">Ajouter a la collection</button>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>

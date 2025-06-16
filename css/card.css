@@ -1,8 +1,10 @@
 #card{
+    position: absolute;
+    top: -300px;
+    width: 100%;
     flex-direction: column;
     max-width: 320px;
     min-height: 340px;
-    margin: 16px;
     padding: 16px;
     border-radius: 10px;
     font-weight: 700;
@@ -119,3 +121,4 @@
         }
     }
 }
+
