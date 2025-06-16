@@ -23,6 +23,7 @@ $estConnecte = isset($_SESSION['user']);
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/card.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="light">
@@ -70,17 +71,49 @@ $estConnecte = isset($_SESSION['user']);
 </nav>
 <?php if ($estConnecte):  echo 'Bienvenu ' . htmlspecialchars($_SESSION['user']['name'])?>
 <?php $booster = Booster::generateBooster();?>
+
+
 <?php foreach($booster as $key => $card):?>
-  <p><?= $card['pokedex_id'];?></p>
-  <p><?= $card['category'];?></p>
-  <p><?= $card['name']['fr'];?></p>
-  <p><?= $card['sprites']['regular'];?></p>
-   <p><?= $card['stats']['hp'];?></p>
-   <p><?= $card['stats']['atk'];?></p>
-   <p><?= $card['stats']['def'];?></p>
-   <p><?= $card['stats']['spe_atk'];?></p>
-   <p><?= $card['stats']['spe_def'];?></p>
-   <p><?= $card['stats']['vit'];?></p>
+  <div class=" <?= Booster::getPokemonType($booster[$key])?>" id="card">
+    <div class="top-card">
+      <p><?= $card['name']['fr'];?></p>
+      <div class="stat">
+        </div>
+        <div class="top-type">
+        <p class="pv"><small>PV</small><?= $card['stats']['hp'];?></p>
+        <?php foreach($card['types'] as $type):?>
+          <?php $types = $type['name']?>
+          <img class="type" src="<?= $type['image'];?>" alt="image">
+        <?php endforeach; ?>
+      </div>
+    </div>
+    <div class="image">
+      <img src="<?= $card['sprites']['regular'];?>" alt="image">
+    </div>
+    <div class="bottom-card">
+      <div class="stat">
+        <p>Points d'attaque</p>
+        <p><?= $card['stats']['atk'];?></p>
+      </div>
+      <div class="stat">
+        <p>Points de defense</p>
+        <p><?= $card['stats']['def'];?></p>
+      </div>
+      <div class="stat">
+        <p>Attaque speciale</p>
+        <p><?= $card['stats']['spe_atk'];?></p>
+      </div>
+      <div class="stat">
+        <p>Defence speciale</p>
+        <p><?= $card['stats']['spe_def'];?></p>
+      </div>
+      <div class="stat">
+        <p>Vitesse</p>
+        <p><?= $card['stats']['vit'];?></p>
+      </div>
+    </div>
+    <p><?= $card['category'];?></p>
+   </div>
 <?php endforeach; ?>
 
 <?php else: ?>

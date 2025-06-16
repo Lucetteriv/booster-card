@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Class;
+
 use Exception;
 
 class Booster{
@@ -63,5 +64,21 @@ class Booster{
         
         }
           return self::$booster;
-    }
+        
+          
+        }
+        public static function getPokemonType($booster): string{
+           
+                foreach($booster['types'] as $type){
+                    $pokemonType[] = $type['name'];
+                }
+
+            
+            return $pokemonType[0];
+
+        }
+
+    
 }
+?>
+
