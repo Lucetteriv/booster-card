@@ -1,17 +1,30 @@
-<?php
-
+<?php 
 include '../config/bootstrap.php';
+use App\Class\Collection;
 
-use App\Database\Database;
-use App\Class\Booster;
-Database::getconnection();
+$collection = new Collection();
 
-session_start();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+     if($_POST['booster']){
+        $booster = json_decode($_POST['booster'], true);
+        try{
+              $collection->Store($booster);
+        } catch (\InvalidArgumentException $e) {
+               echo "Erreur de validation: " . $e->getMessage();
+           }
+     } else {
+        echo "Aucun booster trouvé.";
+        exit();
+     }
+    
+ }
+
 
 $estConnecte = isset($_SESSION['user']);
 
-
-//var_dump($booster);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $booster = $_POST['booster'];
+        }
 
 ?>
 <!DOCTYPE html>
@@ -25,6 +38,7 @@ $estConnecte = isset($_SESSION['user']);
     <link href="../css/card.css" rel="stylesheet">
     <script src="../js/cards.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="light">
@@ -76,25 +90,15 @@ $estConnecte = isset($_SESSION['user']);
     </div>
   </div>
 </nav>
-<?php if ($estConnecte):  echo 'Bienvenu ' . htmlspecialchars($_SESSION['user']['name'])?>
-<?php $booster = Booster::generateBooster();?>
 
+<?php if ($estConnecte):  echo 'Collection de ' . htmlspecialchars($_SESSION['user']['name']);?>
+<?php endif; ?>
 <div class="container vh-100">
   <div class="row justify-content-center align-items-center h-100">
     <div class="col-3 position-relative">
       <?php $i = 9; ?>
-      <?php foreach($booster as $key => $card):?>
-        <div class="card <?= Booster::getPokemonType($booster[$key])?>" id="card"
-            data-nom="<?= $card['name']['fr'] ?>"
-            data-pv="<?= $card['stats']['hp'] ?>"
-            data-atk="<?= $card['stats']['atk'] ?>" 
-            data-def="<?= $card['stats']['def'] ?>"
-            data-spe_atk="<?= $card['stats']['spe_atk'] ?>"
-            data-spe_def="<?= $card['stats']['spe_def'] ?>"
-            data-vit="<?= $card['stats']['vit'] ?>"
-            data-image="<?= $card['sprites']['regular'] ?>"
-            data-category="<?= $card['category'] ?>">
-
+      <?php foreach($booster as $card):?>
+        <div class="card <?= Collection::Store($booster[$key])?>" id="card">
           <div class="top-card">
             <p><?= $card['name']['fr'];?></p>
             <div class="stat">
@@ -136,16 +140,6 @@ $estConnecte = isset($_SESSION['user']);
         </div>
         <?php $i--; ?>
       <?php endforeach; ?>
-      <?php else: ?>
-      <p>Veuillez vous connecter pour ouvrir les packs.</p>
-      <?php endif; ?>
-        <?php $booster = json_encode($booster)?>
-      <form class="AddToCol" action="collection.php" method="post" style="display: block;">
-        <input type="hidden" name="booster" value="<?= htmlspecialchars($booster)?>">
-        <button class="btn btn-primary" type="submit">Ajouter a la collection</button>
-      </form>
-    </div>
-  </div>
-</div>
+      
 </body>
 </html>
