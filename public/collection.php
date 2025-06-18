@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php 
 include '../config/bootstrap.php';
 use App\Class\Collection;
@@ -141,5 +142,176 @@ $estConnecte = isset($_SESSION['user']);
         <?php $i--; ?>
       <?php endforeach; ?>
       
+=======
+<?php
+// public/collection.php
+
+require_once '../config/bootstrap.php';
+
+use App\Auth\AuthHelper;
+use App\Class\Collection;
+
+// Vérifier que l'utilisateur est connecté
+AuthHelper::requireAuth();
+
+$collection = new Collection();
+$userCards = $collection->getUserCollection(AuthHelper::getCurrentUserId());
+$totalCards = $collection->getUserCollectionCount(AuthHelper::getCurrentUserId());
+$currentUser = AuthHelper::getCurrentUser();
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Collection - Pokémon TCG</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card-pokemon {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .card-pokemon:hover {
+            transform: scale(1.05);
+        }
+        .card-image {
+            height: 300px;
+            object-fit: contain;
+        }
+        .rarity-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .quantity-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="./index.php">Pokémon TCG</a>
+            <div class="navbar-nav ms-auto">
+                <?php if (!AuthHelper::isLoggedIn()): ?>
+                  <a class="nav-link" href="./auth/login.php">Connexion</a>
+                  <a class="nav-link" href="./auth/register.php">Inscription</a>
+                  <?php else: ?>
+                    <span class="navbar-text me-3">Bonjour, <?= htmlspecialchars($currentUser['name']) ?></span>
+                    <a class="nav-link" href="./index.php">Ouvrir un Booster</a>
+                    <a class="nav-link active" href="./collection.php">Ma Collection</a>
+                    <a class="nav-link" href="./auth/logout.php">Déconnexion</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Ma Collection</h1>
+                    <div class="text-muted">
+                        <strong><?= $totalCards ?></strong> cartes au total
+                    </div>
+                </div>
+
+                <?php if (empty($userCards)): ?>
+                    <div class="text-center py-5">
+                        <h3 class="text-muted">Votre collection est vide</h3>
+                        <p>Ouvrez votre premier booster pour commencer votre collection !</p>
+                        <a href="../index.php" class="btn btn-primary">Ouvrir un Booster</a>
+                    </div>
+                <?php else: ?>
+                    <div class="row">
+                        <?php foreach ($userCards as $card): ?>
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                <div class="card card-pokemon">
+                                    <div class="position-relative">
+                                        <img src="<?= htmlspecialchars($card['image_url']) ?>"
+                                             class="card-img-top card-image"
+                                             alt="<?= htmlspecialchars($card['name']) ?>">
+
+                                        <?php if ($card['quantity'] > 1): ?>
+                                            <span class="badge quantity-badge">x<?= $card['quantity'] ?></span>
+                                        <?php endif; ?>
+
+                                        <?php if (!empty($card['rarity'])): ?>
+                                            <span class="badge bg-warning rarity-badge">
+                                                <?= htmlspecialchars($card['pokemon_category']) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?= htmlspecialchars($card['name']) ?></h5>
+
+                                        <?php if (!empty($card['pokemon_category'])): ?>
+                                            <p class="card-text">
+                                                <small class="text-muted">
+                                                    <?= htmlspecialchars($card['pokemon_category']) ?>
+                                                </small>
+                                            </p>
+                                        <?php endif; ?>
+
+                                        <?php if (!empty($card['hp'])): ?>
+                                            <div class="mb-2">
+                                                <span class="badge bg-danger">HP: <?= $card['hp'] ?></span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php
+                                        $types = json_decode($card['types'], true);
+                                        if (!empty($types)):
+                                        ?>
+                                            <div class="mb-2">
+                                                <?php foreach ($types as $type): ?>
+                                                    <span class="badge bg-secondary me-1"><?= htmlspecialchars($type) ?></span>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <!-- Stats détaillées -->
+                                        <?php if ($card['attack'] || $card['defense'] || $card['special_attack'] || $card['special_defense'] || $card['speed']): ?>
+                                            <div class="mb-2">
+                                                <small class="text-muted">Stats:</small><br>
+                                                <?php if ($card['attack']): ?>
+                                                    <span class="badge bg-warning text-dark me-1">ATK: <?= $card['attack'] ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($card['defense']): ?>
+                                                    <span class="badge bg-info text-dark me-1">DEF: <?= $card['defense'] ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($card['special_attack']): ?>
+                                                    <span class="badge bg-success me-1">SP.ATK: <?= $card['special_attack'] ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($card['special_defense']): ?>
+                                                    <span class="badge bg-primary me-1">SP.DEF: <?= $card['special_defense'] ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($card['speed']): ?>
+                                                    <span class="badge bg-dark me-1">VIT: <?= $card['speed'] ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <small class="text-muted">
+                                            Obtenue le <?= date('d/m/Y à H:i', strtotime($card['obtained_at'])) ?>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+>>>>>>> 96b9879 (finito)
 </body>
 </html>

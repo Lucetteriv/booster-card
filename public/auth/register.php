@@ -5,11 +5,12 @@ use App\Auth\RegisterUser;
 
 $registerUser = new RegisterUser();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+if ($_SERVER['REQUEST_METHOD'] === 'POST')
 {
     $name = $_POST['name'] ?? '';
     $password = $_POST['password'] ?? '';
-    $email = $_POST['email'] ?? ''; 
+    $email = $_POST['email'] ?? '';
+    var_dump($name, $password, $email); // Pour débogage, à supprimer en production
     try {
         if ($registerUser->register($name, $password, $email)) {
             // Enregistrement réussi
@@ -53,8 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
             </div>
             <div class="col-12">
+<<<<<<< HEAD
                 <label for="exampleInputPassword1" class="form-label mt-4">Password</label>
                 <input type="password" class="form-control" name="password" id="exampleInputPassword1" placeholder="Password" autocomplete="off">
+=======
+                <label for="password" class="form-label mt-4">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password" autocomplete="off">
+>>>>>>> 96b9879 (finito)
             </div>
             <button type="submit" class="btn btn-primary mt-3 w-100">S'inscrire</button>
         </form>

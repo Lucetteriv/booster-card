@@ -3,10 +3,10 @@
 namespace App\Auth;
 
 class LogOutUser{
-    
-    public function logout(): void
+
+    public static function logout(): void
     {
-        if (session_status() === PHP_SESSION_NONE) 
+        if (session_status() === PHP_SESSION_NONE)
         {
             session_start();
         }
@@ -30,5 +30,5 @@ class LogOutUser{
 };
 
 $LogOutUser = new LogOutUser();
-$LogOutUser->logout(); 
+$LogOutUser->logout();
 ?>

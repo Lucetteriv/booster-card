@@ -1,0 +1,141 @@
+.pokemon-card {
+  position: absolute;
+  top: -336px;
+  max-width: 320px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: none !important;
+  will-change: transform;
+
+  .top-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+
+    p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    span {
+      display: flex;
+      align-items: center;
+
+      p {
+        margin: 0;
+        font-size: 1.2rem;
+        small {
+          font-size: 0.6rem;
+        }
+      }
+
+      img {
+        width: 32px;
+        height: auto;
+        border-radius: 50%;
+        border: 2px solid lightgray;
+      }
+    }
+  }
+
+  .card-illustration {
+    width: calc(100% - 20px);
+    height: 200px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    border: 2px solid lightgray;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .card-stats {
+    margin: 10px;
+  }
+
+  &.Acier {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Combat {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Dragon {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Eau {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Électrik {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Fée {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Feu {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Glace {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Insecte {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Normal {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Plante {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Poison {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Psy {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Roche {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Sol {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Spectre {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Ténèbres {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+  &.Vol {
+    background: linear-gradient(to bottom right, #b7b7b7, #d0d0d0);
+    border: 12px solid #a0a0a0;
+  }
+}

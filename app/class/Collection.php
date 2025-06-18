@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php 
 
 namespace App\Class;
@@ -109,5 +110,147 @@ class Collection{
         } catch (Exception $e) {
             echo "Erreur : " . $e->getMessage();
         }
+=======
+<?php
+// app/class/Collection.php
+
+namespace App\Class;
+
+use App\Database\Database;
+use PDO;
+
+class Collection
+{
+    private PDO $db;
+    private Card $cardManager;
+
+    public function __construct()
+    {
+        $this->db = Database::getConnection();
+        $this->cardManager = new Card();
+    }
+
+    /**
+     * Ajoute un booster complet à la collection d'un utilisateur
+     */
+    public function addBoosterToCollection(int $userId, array $boosterData): array
+    {
+        $results = [
+            'success' => true,
+            'message' => '',
+            'added_cards' => [],
+            'updated_cards' => [],
+            'errors' => []
+        ];
+
+        try {
+            $this->db->beginTransaction();
+
+            foreach ($boosterData as $cardData) {
+                // Valider les données de la carte
+                if (!$this->validateCardData($cardData)) {
+                    $results['errors'][] = "Données invalides pour la carte: " . ($cardData['name'] ?? 'inconnue');
+                    continue;
+                }
+
+                // Sauvegarder la carte en base
+                $cardId = $this->cardManager->saveCard($cardData);
+
+                // Ajouter/mettre à jour dans la collection
+                $addResult = $this->addCardToUserCollection($userId, $cardId);
+
+                if ($addResult['action'] === 'added') {
+                    $results['added_cards'][] = $cardData['name'];
+                } else {
+                    $results['updated_cards'][] = $cardData['name'];
+                }
+            }
+
+            $this->db->commit();
+
+            $totalAdded = count($results['added_cards']);
+            $totalUpdated = count($results['updated_cards']);
+
+            if ($totalAdded > 0 && $totalUpdated > 0) {
+                $results['message'] = "{$totalAdded} nouvelles cartes ajoutées et {$totalUpdated} cartes mises à jour dans votre collection !";
+            } elseif ($totalAdded > 0) {
+                $results['message'] = "{$totalAdded} nouvelles cartes ajoutées à votre collection !";
+            } elseif ($totalUpdated > 0) {
+                $results['message'] = "{$totalUpdated} cartes mises à jour dans votre collection !";
+            } else {
+                $results['message'] = "Aucune carte n'a pu être ajoutée.";
+                $results['success'] = false;
+            }
+
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            $results['success'] = false;
+            $results['message'] = "Erreur lors de l'ajout du booster : " . $e->getMessage();
+        }
+
+        return $results;
+    }
+
+    /**
+     * Ajoute une carte à la collection d'un utilisateur
+     */
+    private function addCardToUserCollection(int $userId, int $cardId): array
+    {
+        // Vérifier si l'utilisateur possède déjà cette carte
+        $stmt = $this->db->prepare("SELECT quantity FROM user_collections WHERE user_id = ? AND card_id = ?");
+        $stmt->execute([$userId, $cardId]);
+        $existing = $stmt->fetch();
+
+        if ($existing) {
+            // Mettre à jour la quantité
+            $newQuantity = $existing['quantity'] + 1;
+            $stmt = $this->db->prepare("UPDATE user_collections SET quantity = ? WHERE user_id = ? AND card_id = ?");
+            $stmt->execute([$newQuantity, $userId, $cardId]);
+            return ['action' => 'updated', 'quantity' => $newQuantity];
+        } else {
+            // Ajouter nouvelle carte
+            $stmt = $this->db->prepare("INSERT INTO user_collections (user_id, card_id, quantity) VALUES (?, ?, 1)");
+            $stmt->execute([$userId, $cardId]);
+            return ['action' => 'added', 'quantity' => 1];
+        }
+    }
+
+    /**
+     * Récupère la collection complète d'un utilisateur
+     */
+    public function getUserCollection(int $userId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT c.*, uc.quantity, uc.obtained_at
+             FROM cards c
+             JOIN user_collections uc ON c.id = uc.card_id
+             WHERE uc.user_id = ?
+             ORDER BY uc.obtained_at DESC"
+        );
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Valide les données d'une carte
+     */
+    private function validateCardData(array $cardData): bool
+    {
+        return isset($cardData['pokedex_id']) &&
+               isset($cardData['name']['fr']) &&
+               !empty($cardData['pokedex_id']) &&
+               !empty($cardData['name']['fr']);
+    }
+
+    /**
+     * Compte le nombre total de cartes dans la collection d'un utilisateur
+     */
+    public function getUserCollectionCount(int $userId): int
+    {
+        $stmt = $this->db->prepare("SELECT SUM(quantity) as total FROM user_collections WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        $result = $stmt->fetch();
+        return $result['total'] ?? 0;
+>>>>>>> 96b9879 (finito)
     }
 }

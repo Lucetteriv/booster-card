@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 `
+=======
+>>>>>>> 96b9879 (finito)
 <?php
 
 $basePath = dirname(__DIR__);
